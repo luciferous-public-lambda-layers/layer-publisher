@@ -27,6 +27,14 @@ jobs:
     runs-on: ubuntu-24.04
     needs:
       - start_deploy
+    strategy:
+      fail-fast: true
+      matrix:
+        max_concurrency: [2]
+        index: [0, 1]
+        runner:
+          - ubuntu-24.04
+          - ubuntu-24.04-arm
     steps:
       - name: Add Mask
         run: |
@@ -35,6 +43,9 @@ jobs:
         run: |
           echo $ACTIONS_URL
           echo "identifier: ${{ github.event.inputs.identifier }}"
+          echo "max_concurrency: ${{ matrix.max_concurrency }}"
+          echo "index: ${{ matrix.index }}"
+          echo "runner: ${{ matrix.runner }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
