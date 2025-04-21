@@ -24,7 +24,7 @@ jobs:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   build:
-    runs-on: ubuntu-24.04 [Beta]
+    runs-on: ubuntu-24.04
     needs:
       - start_deploy
     steps:
