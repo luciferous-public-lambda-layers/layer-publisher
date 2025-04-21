@@ -2,6 +2,7 @@ on:
   workflow_dispatch:
     inputs:
       identifier:
+        description: identifier
         required: true
 
 permissions:
@@ -12,4 +13,9 @@ jobs:
   start_deploy:
     runs-on: ubuntu-latest-arm
     steps:
-      - run: echo 1
+      - name: Add Mask
+        run: |
+          echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
+      - run: echo $ACTIONS_URL
+        env:
+          ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
