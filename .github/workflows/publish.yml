@@ -1,0 +1,15 @@
+on:
+  workflow_dispatch:
+    inputs:
+      identifier:
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  start_deploy:
+    runs-on: ubuntu-latest-arm
+    steps:
+      - run: echo 1

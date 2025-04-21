@@ -1,0 +1,18 @@
+[project]
+name = "layer-publisher"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "sinofseven",email = "em.s.00001@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "boto3 (>=1.37.37,<2.0.0)",
+    "boto3-stubs[dynamodb,lambda] (>=1.37.37,<2.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
