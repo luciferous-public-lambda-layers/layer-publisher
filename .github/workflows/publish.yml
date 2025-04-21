@@ -77,3 +77,31 @@ jobs:
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+  fetch_layers:
+    runs-on: ubuntu-24.04
+    needs:
+      - update_state
+    steps:
+      - name: Add Mask
+        run: |
+          echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
+      - run: |
+          echo $ACTIONS_URL
+          echo "identifier: ${{ github.event.inputs.identifier }}"
+        env:
+          ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+  upload-cache:
+    runs-on: ubuntu-24.04
+    needs:
+      - fetch_layers
+    steps:
+      - name: Add Mask
+        run: |
+          echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
+      - run: |
+          echo $ACTIONS_URL
+          echo "identifier: ${{ github.event.inputs.identifier }}"
+        env:
+          ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
