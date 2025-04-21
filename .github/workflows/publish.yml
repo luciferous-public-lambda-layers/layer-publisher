@@ -11,7 +11,43 @@ permissions:
 
 jobs:
   start_deploy:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Add Mask
+        run: |
+          echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
+      - run: echo $ACTIONS_URL
+        env:
+          ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+  build:
+    runs-on: ubuntu-24.04 [Beta]
+    needs:
+      - start_deploy
+    steps:
+      - name: Add Mask
+        run: |
+          echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
+      - run: echo $ACTIONS_URL
+        env:
+          ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+  publish:
+    runs-on: ubuntu-24.04
+    needs:
+      - build
+    steps:
+      - name: Add Mask
+        run: |
+          echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
+      - run: echo $ACTIONS_URL
+        env:
+          ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+  update_state:
+    runs-on: ubuntu-24.04
+    needs:
+      - publish
     steps:
       - name: Add Mask
         run: |
