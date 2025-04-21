@@ -16,7 +16,10 @@ jobs:
       - name: Add Mask
         run: |
           echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
-      - run: echo $ACTIONS_URL
+      - name: tmp
+        run: |
+          echo $ACTIONS_URL
+          echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
@@ -28,7 +31,10 @@ jobs:
       - name: Add Mask
         run: |
           echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
-      - run: echo $ACTIONS_URL
+      - name: tmp
+        run: |
+          echo $ACTIONS_URL
+          echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
@@ -40,7 +46,10 @@ jobs:
       - name: Add Mask
         run: |
           echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
-      - run: echo $ACTIONS_URL
+      - name: tmp
+        run: |
+          echo $ACTIONS_URL
+          echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
@@ -52,6 +61,8 @@ jobs:
       - name: Add Mask
         run: |
           echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
-      - run: echo $ACTIONS_URL
+      - run: |
+          echo $ACTIONS_URL
+          echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
