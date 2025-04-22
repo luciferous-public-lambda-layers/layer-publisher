@@ -124,6 +124,7 @@ jobs:
           echo "region: ${{ matrix.region }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - run: exit 1
       - name: Failed State
         run: echo "Failed"
         if: failure()
@@ -132,6 +133,7 @@ jobs:
         run: aws dynamodb list-tables
         env:
           AWS_REGION: ${{ vars.BASE_AWS_REGION }}
+          AWS_DEFAULT_REGION: ${{ vars.BASE_AWS_REGION }}
 
   update_state:
     runs-on: ubuntu-24.04
@@ -207,7 +209,6 @@ jobs:
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - run: exit 1
       - name: Failed State
         run: echo "Failed"
         if: failure()
@@ -216,6 +217,7 @@ jobs:
         run: aws dynamodb list-tables
         env:
           AWS_REGION: ${{ vars.BASE_AWS_REGION }}
+          AWS_DEFAULT_REGION: ${{ vars.BASE_AWS_REGION }}
 
   upload-cache:
     runs-on: ubuntu-24.04
