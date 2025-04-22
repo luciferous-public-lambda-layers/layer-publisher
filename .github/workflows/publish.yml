@@ -131,7 +131,7 @@ jobs:
         if: failure()
         run: aws dynamodb list-tables
         env:
-          AWS_DEFAULT_REGION: ${{ vars.BASE_AWS_REGION }}
+          AWS_REGION: ${{ vars.BASE_AWS_REGION }}
 
   update_state:
     runs-on: ubuntu-24.04
@@ -215,7 +215,7 @@ jobs:
         if: failure()
         run: aws dynamodb list-tables
         env:
-          AWS_DEFAULT_REGION: ${{ vars.BASE_AWS_REGION }}
+          AWS_REGION: ${{ vars.BASE_AWS_REGION }}
 
   upload-cache:
     runs-on: ubuntu-24.04
