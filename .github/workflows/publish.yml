@@ -20,16 +20,24 @@ jobs:
         with:
           role-to-assume: ${{ secrets.ARN_ROLE_PUBLISHER }}
           aws-region: ${{ vars.BASE_AWS_REGION }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+      - run: |
+          pip install "poetry<3.0"
+          poetry install --only main
       - name: tmp
         run: |
           echo $ACTIONS_URL
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - run: aws dynamodb list-tables
-      - name: Failed State
-        run: echo "Failed"
+      - run: make update-failed
         if: failure()
+        env:
+          IDENTIFIER: ${{ github.event.inputs.identifier }}
+          TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
+          URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   build:
     runs-on: ${{ matrix.runner }}
@@ -47,6 +55,12 @@ jobs:
       - name: Add Mask
         run: |
           echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+      - run: |
+          pip install "poetry<3.0"
+          poetry install --only main
       - name: tmp
         run: |
           echo $ACTIONS_URL
@@ -64,8 +78,12 @@ jobs:
         with:
           role-to-assume: ${{ secrets.ARN_ROLE_PUBLISHER }}
           aws-region: ${{ vars.BASE_AWS_REGION }}
-      - run: aws dynamodb list-tables
+      - run: make update-failed
         if: failure()
+        env:
+          IDENTIFIER: ${{ github.event.inputs.identifier }}
+          TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
+          URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   publish:
     runs-on: ubuntu-24.04
@@ -117,6 +135,12 @@ jobs:
         with:
           role-to-assume: ${{ secrets.ARN_ROLE_PUBLISHER }}
           aws-region: ${{ matrix.region }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+      - run: |
+          pip install "poetry<3.0"
+          poetry install --only main
       - name: tmp
         run: |
           echo $ACTIONS_URL
@@ -124,14 +148,12 @@ jobs:
           echo "region: ${{ matrix.region }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - run: exit 1
-      - name: Failed State
-        run: echo "Failed"
+      - run: make update-failed
         if: failure()
-      - name: test ap-northeast-1
-        if: failure()
-        run: aws dynamodb list-tables
         env:
+          IDENTIFIER: ${{ github.event.inputs.identifier }}
+          TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
+          URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           AWS_REGION: ${{ vars.BASE_AWS_REGION }}
           AWS_DEFAULT_REGION: ${{ vars.BASE_AWS_REGION }}
 
@@ -147,15 +169,24 @@ jobs:
         with:
           role-to-assume: ${{ secrets.ARN_ROLE_PUBLISHER }}
           aws-region: ${{ vars.BASE_AWS_REGION }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+      - run: |
+          pip install "poetry<3.0"
+          poetry install --only main
       - run: |
           echo $ACTIONS_URL
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       - run: aws dynamodb list-tables
-      - name: Failed State
-        run: echo "Failed"
+      - run: make update-failed
         if: failure()
+        env:
+          IDENTIFIER: ${{ github.event.inputs.identifier }}
+          TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
+          URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   fetch_layers:
     runs-on: ubuntu-24.04
@@ -204,18 +235,23 @@ jobs:
         with:
           role-to-assume: ${{ secrets.ARN_ROLE_PUBLISHER }}
           aws-region: ${{ matrix.region }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+      - run: |
+          pip install "poetry<3.0"
+          poetry install --only main
       - run: |
           echo $ACTIONS_URL
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - name: Failed State
-        run: echo "Failed"
+      - run: make update-failed
         if: failure()
-      - name: run ap-northeast-1
-        if: failure()
-        run: aws dynamodb list-tables
         env:
+          IDENTIFIER: ${{ github.event.inputs.identifier }}
+          TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
+          URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           AWS_REGION: ${{ vars.BASE_AWS_REGION }}
           AWS_DEFAULT_REGION: ${{ vars.BASE_AWS_REGION }}
 
@@ -231,12 +267,21 @@ jobs:
         with:
           role-to-assume: ${{ secrets.ARN_ROLE_PUBLISHER }}
           aws-region: ${{ vars.BASE_AWS_REGION }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+      - run: |
+          pip install "poetry<3.0"
+          poetry install --only main
       - run: |
           echo $ACTIONS_URL
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       - run: aws dynamodb list-tables
-      - name: Failed State
-        run: echo "Failed"
+      - run: make update-failed
         if: failure()
+        env:
+          IDENTIFIER: ${{ github.event.inputs.identifier }}
+          TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
+          URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
