@@ -59,9 +59,6 @@ jobs:
     runs-on: ubuntu-24.04
     needs:
       - build
-    concurrency:
-      cancel-in-progress: false
-      group: publish-in-${ matrix.region }}
     strategy:
       fail-fast: true
       matrix:
@@ -97,6 +94,9 @@ jobs:
           - us-east-2
           - us-west-1
           - us-west-2
+    concurrency:
+      cancel-in-progress: false
+      group: publish-in-${{ matrix.region }}
     steps:
       - name: Add Mask
         run: |
