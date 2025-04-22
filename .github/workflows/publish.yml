@@ -26,7 +26,7 @@ jobs:
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - run: aws s3 ls
+      - run: aws s3api list-buckets
       - name: Failed State
         run: echo "Failed"
         if: failure()
@@ -64,7 +64,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.ARN_ROLE_PUBLISHER }}
           aws-region: ${{ vars.BASE_AWS_REGION }}
-      - run: aws s3 ls
+      - run: aws s3api list-buckets
         if: failure()
 
   publish:
@@ -129,7 +129,7 @@ jobs:
         if: failure()
       - name: test ap-northeast-1
         if: failure()
-        run: aws s3 ls
+        run: aws s3api list-buckets
         env:
           AWS_DEFAULT_REGION: ${{ vars.BASE_AWS_REGION }}
 
@@ -150,7 +150,7 @@ jobs:
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - run: aws s3 ls
+      - run: aws s3api list-buckets
       - name: Failed State
         run: echo "Failed"
         if: failure()
@@ -212,7 +212,7 @@ jobs:
         if: failure()
       - name: run ap-northeast-1
         if: failure()
-        run: aws s3 ls
+        run: aws s3api list-buckets
         env:
           AWS_DEFAULT_REGION: ${{ vars.BASE_AWS_REGION }}
 
@@ -233,7 +233,7 @@ jobs:
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - run: aws s3 ls
+      - run: aws s3api list-buckets
       - name: Failed State
         run: echo "Failed"
         if: failure()
