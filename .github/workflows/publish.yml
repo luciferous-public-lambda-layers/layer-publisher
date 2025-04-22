@@ -33,13 +33,6 @@ jobs:
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - run: make update-failed
-        if: failure()
-        env:
-          IDENTIFIER: ${{ github.event.inputs.identifier }}
-          TABLE_NAME: ${{ vars.TABLE_NAME }}
-          URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
 
   build:
     runs-on: ${{ matrix.runner }}
@@ -73,21 +66,6 @@ jobs:
           echo "runner: ${{ matrix.runner }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - name: Failed State
-        run: echo "Failed"
-        if: failure()
-      - uses: aws-actions/configure-aws-credentials@v4
-        if: failure()
-        with:
-          role-to-assume: ${{ secrets.ARN_ROLE_PUBLISHER }}
-          aws-region: ${{ vars.BASE_AWS_REGION }}
-      - run: make update-failed
-        if: failure()
-        env:
-          IDENTIFIER: ${{ github.event.inputs.identifier }}
-          TABLE_NAME: ${{ vars.TABLE_NAME }}
-          URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
 
   publish:
     runs-on: ubuntu-24.04
@@ -153,16 +131,6 @@ jobs:
           echo "region: ${{ matrix.region }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - run: exit 1
-      - run: make update-failed
-        if: failure()
-        env:
-          IDENTIFIER: ${{ github.event.inputs.identifier }}
-          TABLE_NAME: ${{ vars.TABLE_NAME }}
-          URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
-          AWS_REGION: ${{ vars.BASE_AWS_REGION }}
-          AWS_DEFAULT_REGION: ${{ vars.BASE_AWS_REGION }}
 
   update_state:
     runs-on: ubuntu-24.04
@@ -256,15 +224,6 @@ jobs:
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - run: make update-failed
-        if: failure()
-        env:
-          IDENTIFIER: ${{ github.event.inputs.identifier }}
-          TABLE_NAME: ${{ vars.TABLE_NAME }}
-          URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
-          AWS_REGION: ${{ vars.BASE_AWS_REGION }}
-          AWS_DEFAULT_REGION: ${{ vars.BASE_AWS_REGION }}
 
   upload-cache:
     runs-on: ubuntu-24.04
@@ -291,8 +250,30 @@ jobs:
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       - run: aws dynamodb list-tables
+
+  notify-failed:
+    runs-on: ubuntu-24.04
+    if: failure()
+    needs:
+      - start_deploy
+      - publish
+      - update_state
+    steps:
+      - name: Add Mask
+        run: |
+          echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.ARN_ROLE_PUBLISHER }}
+          aws-region: ${{ vars.BASE_AWS_REGION }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+      - run: |
+          pip install "poetry<3.0"
+          poetry install --only main
       - run: make update-failed
-        if: failure()
         env:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
           TABLE_NAME: ${{ vars.TABLE_NAME }}
