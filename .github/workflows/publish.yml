@@ -22,6 +22,9 @@ jobs:
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - name: Failed State
+        run: echo "Failed"
+        if: failure()
 
   build:
     runs-on: ${{ matrix.runner }}
@@ -48,11 +51,52 @@ jobs:
           echo "runner: ${{ matrix.runner }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - name: Failed State
+        run: echo "Failed"
+        if: failure()
 
   publish:
     runs-on: ubuntu-24.04
     needs:
       - build
+    concurrency:
+      cancel-in-progress: false
+      group: publish-in-${ matrix.region }}
+    strategy:
+      fail-fast: true
+      matrix:
+        region:
+          - af-south-1
+          - ap-south-2
+          - ap-southeast-3
+          - ap-southeast-4
+          - ap-southeast-5
+          - ap-southeast-7
+          - ca-west-1
+          - eu-central-2
+          - eu-south-1
+          - eu-south-2
+          - il-central-1
+          - me-central-1
+          - me-south-1
+          - mx-central-1
+          - ap-northeast-1
+          - ap-northeast-2
+          - ap-northeast-3
+          - ap-south-1
+          - ap-southeast-1
+          - ap-southeast-2
+          - ca-central-1
+          - eu-central-1
+          - eu-north-1
+          - eu-west-1
+          - eu-west-2
+          - eu-west-3
+          - sa-east-1
+          - us-east-1
+          - us-east-2
+          - us-west-1
+          - us-west-2
     steps:
       - name: Add Mask
         run: |
@@ -61,8 +105,12 @@ jobs:
         run: |
           echo $ACTIONS_URL
           echo "identifier: ${{ github.event.inputs.identifier }}"
+          echo "region: ${{ matrix.region }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - name: Failed State
+        run: echo "Failed"
+        if: failure()
 
   update_state:
     runs-on: ubuntu-24.04
@@ -77,11 +125,49 @@ jobs:
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - name: Failed State
+        run: echo "Failed"
+        if: failure()
 
   fetch_layers:
     runs-on: ubuntu-24.04
     needs:
       - update_state
+    strategy:
+      fail-fast: true
+      matrix:
+        region:
+          - af-south-1
+          - ap-south-2
+          - ap-southeast-3
+          - ap-southeast-4
+          - ap-southeast-5
+          - ap-southeast-7
+          - ca-west-1
+          - eu-central-2
+          - eu-south-1
+          - eu-south-2
+          - il-central-1
+          - me-central-1
+          - me-south-1
+          - mx-central-1
+          - ap-northeast-1
+          - ap-northeast-2
+          - ap-northeast-3
+          - ap-south-1
+          - ap-southeast-1
+          - ap-southeast-2
+          - ca-central-1
+          - eu-central-1
+          - eu-north-1
+          - eu-west-1
+          - eu-west-2
+          - eu-west-3
+          - sa-east-1
+          - us-east-1
+          - us-east-2
+          - us-west-1
+          - us-west-2
     steps:
       - name: Add Mask
         run: |
@@ -91,6 +177,9 @@ jobs:
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - name: Failed State
+        run: echo "Failed"
+        if: failure()
 
   upload-cache:
     runs-on: ubuntu-24.04
@@ -105,3 +194,6 @@ jobs:
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - name: Failed State
+        run: echo "Failed"
+        if: failure()
