@@ -33,6 +33,7 @@ jobs:
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - run: exit 1
       - run: make update-failed
         if: failure()
         env:
