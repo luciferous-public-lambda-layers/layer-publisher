@@ -47,6 +47,7 @@ files = [
 [package.dependencies]
 botocore-stubs = "*"
 mypy-boto3-dynamodb = {version = ">=1.37.0,<1.38.0", optional = true, markers = "extra == \"dynamodb\""}
+mypy-boto3-events = {version = ">=1.37.0,<1.38.0", optional = true, markers = "extra == \"events\""}
 mypy-boto3-lambda = {version = ">=1.37.0,<1.38.0", optional = true, markers = "extra == \"lambda\""}
 types-s3transfer = "*"
 
@@ -523,6 +524,18 @@ files = [
 ]
 
 [[package]]
+name = "mypy-boto3-events"
+version = "1.37.35"
+description = "Type annotations for boto3 EventBridge 1.37.35 service generated with mypy-boto3-builder 8.10.1"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "mypy_boto3_events-1.37.35-py3-none-any.whl", hash = "sha256:babf965278e46ade4b5bb8a3502e4ca72560aa49cb9c6bf912926c682e570908"},
+    {file = "mypy_boto3_events-1.37.35.tar.gz", hash = "sha256:1c865319a55236c75d6710f17a7a733455990ef57b1e5db564a55f6c661817d8"},
+]
+
+[[package]]
 name = "mypy-boto3-lambda"
 version = "1.37.16"
 description = "Type annotations for boto3 Lambda 1.37.16 service generated with mypy-boto3-builder 8.10.1"
@@ -852,4 +865,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "f4207ac308787ff3a4e0a01a9cd8c4ab8a6350e72d4b607bb71608f65b96f7bd"
+content-hash = "b7b1c44bb641379813702ff2c61d86ccbb8aa2c14383ffa49191d62bf57d8333"
