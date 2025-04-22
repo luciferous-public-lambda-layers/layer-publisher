@@ -39,7 +39,7 @@ jobs:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
           TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
           URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          EVENT_BUS_NAME: ${{ var.EVENT_BUS_NAME }}
+          EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
 
   build:
     runs-on: ${{ matrix.runner }}
@@ -87,7 +87,7 @@ jobs:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
           TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
           URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          EVENT_BUS_NAME: ${{ var.EVENT_BUS_NAME }}
+          EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
 
   publish:
     runs-on: ubuntu-24.04
@@ -159,7 +159,7 @@ jobs:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
           TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
           URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          EVENT_BUS_NAME: ${{ var.EVENT_BUS_NAME }}
+          EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
           AWS_REGION: ${{ vars.BASE_AWS_REGION }}
           AWS_DEFAULT_REGION: ${{ vars.BASE_AWS_REGION }}
 
@@ -194,7 +194,7 @@ jobs:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
           TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
           URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          EVENT_BUS_NAME: ${{ var.EVENT_BUS_NAME }}
+          EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
 
   fetch_layers:
     runs-on: ubuntu-24.04
@@ -261,7 +261,7 @@ jobs:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
           TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
           URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          EVENT_BUS_NAME: ${{ var.EVENT_BUS_NAME }}
+          EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
           AWS_REGION: ${{ vars.BASE_AWS_REGION }}
           AWS_DEFAULT_REGION: ${{ vars.BASE_AWS_REGION }}
 
@@ -296,4 +296,4 @@ jobs:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
           TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
           URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          EVENT_BUS_NAME: ${{ var.EVENT_BUS_NAME }}
+          EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
