@@ -38,7 +38,7 @@ jobs:
         if: failure()
         env:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
-          TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
+          TABLE_NAME: ${{ vars.TABLE_NAME }}
           URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
 
@@ -86,7 +86,7 @@ jobs:
         if: failure()
         env:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
-          TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
+          TABLE_NAME: ${{ vars.TABLE_NAME }}
           URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
 
@@ -158,7 +158,7 @@ jobs:
         if: failure()
         env:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
-          TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
+          TABLE_NAME: ${{ vars.TABLE_NAME }}
           URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
           AWS_REGION: ${{ vars.BASE_AWS_REGION }}
@@ -193,7 +193,7 @@ jobs:
         if: failure()
         env:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
-          TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
+          TABLE_NAME: ${{ vars.TABLE_NAME }}
           URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
 
@@ -260,7 +260,7 @@ jobs:
         if: failure()
         env:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
-          TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
+          TABLE_NAME: ${{ vars.TABLE_NAME }}
           URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
           AWS_REGION: ${{ vars.BASE_AWS_REGION }}
@@ -295,6 +295,6 @@ jobs:
         if: failure()
         env:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
-          TABLE_NAME: ${{ vars.BASE_AWS_REGION }}
+          TABLE_NAME: ${{ vars.TABLE_NAME }}
           URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
