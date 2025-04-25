@@ -19,8 +19,30 @@ permissions:
   contents: read
 
 jobs:
+  start_generate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Add Mask
+        run: |
+          echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.ARN_ROLE_PUBLISHER }}
+          aws-region: ${{ vars.BASE_AWS_REGION }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+      - run: |
+          pip install "poetry<3.0"
+          poetry install --only main
+      - run: aws dynamodb list-tables
+      - run: exit 1
+
   fetch_layers:
     runs-on: ubuntu-24.04
+    needs:
+      - start_generate
     strategy:
       fail-fast: true
       matrix:
@@ -107,6 +129,7 @@ jobs:
     runs-on: ubuntu-24.04
     if: failure()
     needs:
+      - start_generate
       - fetch_layers
       - upload-cache
     steps:
