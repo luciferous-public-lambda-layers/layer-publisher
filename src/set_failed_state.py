@@ -38,6 +38,7 @@ if env.call_on_publish:
     }
 else:
     attributes = {
+        "stateGenerate": "FAILED",
         "updatedAt": datetime.now(jst).isoformat(),
         name_attr_url: env.url_action_run,
     }
