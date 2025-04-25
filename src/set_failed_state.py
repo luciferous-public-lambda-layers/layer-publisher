@@ -30,11 +30,17 @@ events: EventBridgeClient = boto3.client("events")
 
 name_attr_url = "actionsPublishUrl" if env.call_on_publish else "actionsGenerateUrl"
 
-attributes = {
-    "stateLayer": "FAILED",
-    "updatedAt": datetime.now(jst).isoformat(),
-    name_attr_url: env.url_action_run,
-}
+if env.call_on_publish:
+    attributes = {
+        "stateLayer": "FAILED",
+        "updatedAt": datetime.now(jst).isoformat(),
+        name_attr_url: env.url_action_run,
+    }
+else:
+    attributes = {
+        "updatedAt": datetime.now(jst).isoformat(),
+        name_attr_url: env.url_action_run,
+    }
 
 resp = table.update_item(
     Key={"identifier": env.identifier},
