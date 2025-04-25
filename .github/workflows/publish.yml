@@ -134,7 +134,6 @@ jobs:
           echo "region: ${{ matrix.region }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - run: exit 1
 
   finish_deploy:
     runs-on: ubuntu-24.04
@@ -161,13 +160,7 @@ jobs:
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       - run: aws dynamodb list-tables
-      - run: make update-failed
-        if: failure()
-        env:
-          IDENTIFIER: ${{ github.event.inputs.identifier }}
-          TABLE_NAME: ${{ vars.TABLE_NAME }}
-          URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
+      - run: exit 1
 
   call_generate:
     needs:
