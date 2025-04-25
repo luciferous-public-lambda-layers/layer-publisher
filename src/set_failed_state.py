@@ -84,7 +84,7 @@ payload_dict = {
         },
         {
             "type": "section",
-            "text": {"type": "mrkdwn", "text": f"*System Name:* failed in {msg_error}"},
+            "text": {"type": "mrkdwn", "text": f"*System Name:* `failed in {msg_error}`"},
         },
         {
             "type": "section",
