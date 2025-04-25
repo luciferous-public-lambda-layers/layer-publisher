@@ -160,7 +160,6 @@ jobs:
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       - run: aws dynamodb list-tables
-      - run: exit 1
 
   call_generate:
     needs:
