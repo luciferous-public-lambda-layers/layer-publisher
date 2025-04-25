@@ -10,8 +10,12 @@ update-failed:
 publish-finish-deploy:
 	poetry run python src/publish/fnish_deploy/finish_deploy.py
 
+generate-complete-generate:
+	poetry run python src/generate/complete_generate.py
+
 
 .PHONY: \
 	format \
 	update-failed \
-	publish-finish-deploy
+	publish-finish-deploy \
+	generate-complete-generate

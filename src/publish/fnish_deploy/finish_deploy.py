@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 class EnvironmentVariables(BaseSettings):
     table_name: str
     identifier: str
-    url_action_run: str
 
 
 jst = ZoneInfo("Asia/Tokyo")

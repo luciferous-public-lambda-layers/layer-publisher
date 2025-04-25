@@ -98,7 +98,7 @@ jobs:
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
-  upload-cache:
+  complete_generate:
     runs-on: ubuntu-24.04
     needs:
       - fetch_layers
@@ -117,12 +117,10 @@ jobs:
       - run: |
           pip install "poetry<3.0"
           poetry install --only main
-      - run: |
-          echo $ACTIONS_URL
-          echo "identifier: ${{ github.event.inputs.identifier }}"
+      - run: make generate-complete-generate
         env:
-          ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - run: aws dynamodb list-tables
+          IDENTIFIER: ${{ github.event.inputs.identifier }}
+          TABLE_NAME: ${{ vars.TABLE_NAME }}
 
   notify-failed:
     runs-on: ubuntu-24.04
@@ -130,7 +128,7 @@ jobs:
     needs:
       - start_generate
       - fetch_layers
-      - upload-cache
+      - complete_generate
     steps:
       - name: Add Mask
         run: |
