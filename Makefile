@@ -8,7 +8,7 @@ update-failed:
 	poetry run python src/set_failed_state.py
 
 publish-finish-deploy:
-	poetry run python src/publish_finish_deploy.py
+	poetry run python src/publish/fnish_deploy/finish_deploy.py
 
 
 .PHONY: \
