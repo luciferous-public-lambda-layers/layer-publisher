@@ -97,7 +97,6 @@ jobs:
           echo "identifier: ${{ github.event.inputs.identifier }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - run: exit 2
 
   upload-cache:
     runs-on: ubuntu-24.04
@@ -124,6 +123,7 @@ jobs:
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       - run: aws dynamodb list-tables
+      - run: exit 2
 
   notify-failed:
     runs-on: ubuntu-24.04
