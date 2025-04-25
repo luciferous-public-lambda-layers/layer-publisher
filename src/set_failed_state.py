@@ -18,24 +18,29 @@ class EnvironmentVariables(BaseSettings):
     identifier: str
     url_action_run: str
     event_bus_name: str
+    call_on_publish: bool = True
 
 
 jst = ZoneInfo("Asia/Tokyo")
 env = EnvironmentVariables()
-all_keys = ["stateLayer", "updatedAt", "githubActionsUrl"]
+all_keys = ["stateLayer", "updatedAt", "actionsPublishUrl"]
 
 table: Table = boto3.resource("dynamodb").Table(env.table_name)
 events: EventBridgeClient = boto3.client("events")
 
+name_attr_url = "actionsPublishUrl" if env.call_on_publish else "actionsGenerateUrl"
+
+attributes = {
+    "stateLayer": "FAILED",
+    "updatedAt": datetime.now(jst).isoformat(),
+    name_attr_url: env.url_action_run,
+}
+
 resp = table.update_item(
     Key={"identifier": env.identifier},
-    UpdateExpression="set " + ", ".join([f"#{k} = :{k}" for k in all_keys]),
-    ExpressionAttributeNames={f"#{k}": k for k in all_keys},
-    ExpressionAttributeValues={
-        ":stateLayer": "FAILED",
-        ":updatedAt": datetime.now(jst).isoformat(),
-        ":githubActionsUrl": env.url_action_run,
-    },
+    UpdateExpression="set " + ", ".join([f"#{k} = :{k}" for k in attributes.keys()]),
+    ExpressionAttributeNames={f"#{k}": k for k in attributes.keys()},
+    ExpressionAttributeValues={f":{k}": v for k, v in attributes.items()},
     ReturnValues="ALL_NEW",
 )
 
@@ -47,6 +52,8 @@ print(
         default=lambda x: {"type": str(type(x)), "value": str(x)},
     )
 )
+
+msg_error = "publishing" if env.call_on_publish else "generating"
 
 payload_dict = {
     "blocks": [
@@ -71,7 +78,7 @@ payload_dict = {
         },
         {
             "type": "section",
-            "text": {"type": "mrkdwn", "text": "*System Name:* failed in publishing"},
+            "text": {"type": "mrkdwn", "text": f"*System Name:* failed in {msg_error}"},
         },
         {
             "type": "section",

@@ -1,4 +1,4 @@
-name: publish
+name: generate
 
 on:
   workflow_dispatch:
@@ -7,74 +7,20 @@ on:
         description: identifier
         required: true
 
+  workflow_call:
+    inputs:
+      identifier:
+        description: identifier
+        required: true
+        type: string
+
 permissions:
   id-token: write
   contents: read
-  actions: write
 
 jobs:
-  start_deploy:
+  fetch_layers:
     runs-on: ubuntu-24.04
-    steps:
-      - name: Add Mask
-        run: |
-          echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
-      - uses: actions/checkout@v4
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.ARN_ROLE_PUBLISHER }}
-          aws-region: ${{ vars.BASE_AWS_REGION }}
-      - uses: actions/setup-python@v5
-        with:
-          python-version-file: .python-version
-      - run: |
-          pip install "poetry<3.0"
-          poetry install --only main
-      - name: tmp
-        run: |
-          echo $ACTIONS_URL
-          echo "identifier: ${{ github.event.inputs.identifier }}"
-        env:
-          ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - run: exit 1
-
-  build:
-    runs-on: ${{ matrix.runner }}
-    needs:
-      - start_deploy
-    strategy:
-      fail-fast: true
-      matrix:
-        max_concurrency: [2]
-        index: [0, 1]
-        runner:
-          - ubuntu-24.04
-          - ubuntu-24.04-arm
-    steps:
-      - name: Add Mask
-        run: |
-          echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version-file: .python-version
-      - run: |
-          pip install "poetry<3.0"
-          poetry install --only main
-      - name: tmp
-        run: |
-          echo $ACTIONS_URL
-          echo "identifier: ${{ github.event.inputs.identifier }}"
-          echo "max_concurrency: ${{ matrix.max_concurrency }}"
-          echo "index: ${{ matrix.index }}"
-          echo "runner: ${{ matrix.runner }}"
-        env:
-          ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-
-  publish:
-    runs-on: ubuntu-24.04
-    needs:
-      - build
     strategy:
       fail-fast: true
       matrix:
@@ -110,9 +56,6 @@ jobs:
           - us-east-2
           - us-west-1
           - us-west-2
-    concurrency:
-      cancel-in-progress: false
-      group: publish-in-${{ matrix.region }}
     steps:
       - name: Add Mask
         run: |
@@ -128,18 +71,16 @@ jobs:
       - run: |
           pip install "poetry<3.0"
           poetry install --only main
-      - name: tmp
-        run: |
+      - run: |
           echo $ACTIONS_URL
           echo "identifier: ${{ github.event.inputs.identifier }}"
-          echo "region: ${{ matrix.region }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
-  finish_deploy:
+  upload-cache:
     runs-on: ubuntu-24.04
     needs:
-      - publish
+      - fetch_layers
     steps:
       - name: Add Mask
         run: |
@@ -161,26 +102,13 @@ jobs:
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       - run: aws dynamodb list-tables
-      - run: make update-failed
-        if: failure()
-        env:
-          IDENTIFIER: ${{ github.event.inputs.identifier }}
-          TABLE_NAME: ${{ vars.TABLE_NAME }}
-          URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
-
-  call_generate:
-    uses: ./.github/workflows/generate.yml
-    with:
-      identifier: ${{ github.event.inputs.identifier }}
 
   notify-failed:
     runs-on: ubuntu-24.04
     if: failure()
     needs:
-      - start_deploy
-      - publish
-      - finish_deploy
+      - fetch_layers
+      - upload-cache
     steps:
       - name: Add Mask
         run: |
@@ -202,4 +130,5 @@ jobs:
           TABLE_NAME: ${{ vars.TABLE_NAME }}
           URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
+          CALL_ON_PUBLISH: "false"
 
