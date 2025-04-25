@@ -169,7 +169,10 @@ jobs:
           EVENT_BUS_NAME: ${{ vars.EVENT_BUS_NAME }}
 
   call_generate:
+    needs:
+      - finish_deploy
     uses: ./.github/workflows/generate.yml
+    secrets: inherit
     with:
       identifier: ${{ github.event.inputs.identifier }}
 
