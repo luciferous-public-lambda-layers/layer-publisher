@@ -30,12 +30,11 @@ jobs:
       - run: |
           pip install "poetry<3.0"
           poetry install --only main
-      - name: tmp
-        run: |
-          echo $ACTIONS_URL
-          echo "identifier: ${{ github.event.inputs.identifier }}"
+      - run: make publish-start-deploy
         env:
-          ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          IDENTIFIER: ${{ github.event.inputs.identifier }}
+          TABLE_NAME: ${{ vars.TABLE_NAME }}
+          URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   build:
     runs-on: ${{ matrix.runner }}
