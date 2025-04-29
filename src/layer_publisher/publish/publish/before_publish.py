@@ -51,9 +51,12 @@ def has_target_bucket(*, bucket_name: str, region: str) -> bool:
 
 
 def create_bucket(*, bucket_name: str, region: str):
-    s3.create_bucket(
-        Bucket=bucket_name, CreateBucketConfiguration={"LocationConstraint": region}
-    )
+    if region == "us-east-1":
+        s3.create_bucket(Bucket=bucket_name)
+    else:
+        s3.create_bucket(
+            Bucket=bucket_name, CreateBucketConfiguration={"LocationConstraint": region}
+        )
 
 
 if __name__ == "__main__":
