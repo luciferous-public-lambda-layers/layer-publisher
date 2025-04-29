@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 import boto3
 from pydantic_settings import BaseSettings
 
-from src.utils.variables import FILE_LAYER_INFO
+from utils.variables import FILE_LAYER_INFO
 
 if TYPE_CHECKING:
     from mypy_boto3_dynamodb.service_resource import Table

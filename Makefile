@@ -1,4 +1,5 @@
 SHELL = /usr/bin/env bash -xeuo pipefail
+PYTHONPATH = ./src
 
 format:
 	poetry run ruff check --select I --fix src/
