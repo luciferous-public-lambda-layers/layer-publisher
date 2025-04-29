@@ -75,7 +75,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: publish-layer-json
-      - run: cat layer.json
+      - run: |
+          docker container run --name build public.ecr.aws/sam/build-python3.13:latest pip install numpy -t /tmp/dist/modules-2-0-amd/python3.13/python
+          docker container cp build:/tmp/dist .
+      - run: |
+          find dist -f | sort
 
   publish:
     runs-on: ubuntu-24.04

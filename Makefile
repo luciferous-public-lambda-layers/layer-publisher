@@ -25,13 +25,12 @@ generate-start-generate:
 generate-complete-generate:
 	poetry run python src/layer_publisher/generate/complete_generate.py
 
-test:
-	poetry run python src/layer_publisher/publish/test.py
-
 .PHONY: \
 	format \
 	update-failed \
 	publish-start-publish \
+	publish-publish-before-publish \
+	publish-publish-after-publish \
 	publish-finish-publish \
 	generate-start-generate \
 	generate-complete-generate
