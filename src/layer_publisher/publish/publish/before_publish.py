@@ -25,7 +25,7 @@ def main():
     region = load_region()
     bucket_name = generate_bucket_name(account_id=account_id, region=region)
     if not has_target_bucket(bucket_name=bucket_name, region=region):
-        pass
+        create_bucket(bucket_name=bucket_name, region=region)
 
 
 def load_layer_info() -> Layer:
