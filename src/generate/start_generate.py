@@ -38,7 +38,7 @@ def update_state():
         UpdateExpression="set "
         + ", ".join([f"#{k} = :{k}" for k in attributes.keys()]),
         ExpressionAttributeNames={f"#{k}": k for k in attributes.keys()},
-        ExpressionAttributeValues={f"#{k}": v for k, v in attributes.items()},
+        ExpressionAttributeValues={f":{k}": v for k, v in attributes.items()},
         ReturnValues="ALL_NEW",
     )
     return resp["Attributes"]
