@@ -144,7 +144,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: publish-layer-json
-      - run: cat layer.json
+      - run: make publish-publish-before-publish
 
   finish_deploy:
     runs-on: ubuntu-24.04

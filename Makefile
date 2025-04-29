@@ -10,6 +10,12 @@ update-failed:
 publish-start-publish:
 	poetry run python src/layer_publisher/publish/start_publish.py
 
+publish-publish-before-publish:
+	poetry run python src/layer_publisher/publish/publish/before_publish.py
+
+publish-publish-after-publish:
+	poetry run python src/layer_publisher/publish/publish/after_publish.py
+
 publish-finish-publish:
 	poetry run python src/layer_publisher/publish/finish_publish.py
 
