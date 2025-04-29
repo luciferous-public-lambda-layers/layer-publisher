@@ -29,7 +29,11 @@ def main():
 
 
 def update_state():
-    attributes = {"stateLayer": "DEPLOYING", "updatedAt": datetime.now(jst).isoformat()}
+    attributes = {
+        "stateLayer": "DEPLOYING",
+        "updatedAt": datetime.now(jst).isoformat(),
+        "actionsPublishUrl": env.url_action_run
+    }
     resp = table.update_item(
         Key={"identifier": env.identifier},
         UpdateExpression="set "

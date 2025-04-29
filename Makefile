@@ -7,11 +7,11 @@ format:
 update-failed:
 	poetry run python src/set_failed_state.py
 
-publish-start-deploy:
-	poetry run python src/publish/start_deploy.py
+publish-start-publish:
+	poetry run python src/publish/start_publish.py
 
-publish-finish-deploy:
-	poetry run python src/publish/finish_deploy.py
+publish-finish-publish:
+	poetry run python src/publish/finish_publish.py
 
 generate-start-generate:
 	poetry run python src/generate/start_generate.py
@@ -24,7 +24,7 @@ generate-complete-generate:
 .PHONY: \
 	format \
 	update-failed \
-	publish-start-deploy \
-	publish-finish-deploy \
+	publish-start-publish \
+	publish-finish-publish \
 	generate-start-generate \
 	generate-complete-generate

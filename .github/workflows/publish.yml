@@ -30,7 +30,7 @@ jobs:
       - run: |
           pip install "poetry<3.0"
           poetry install --only main
-      - run: make publish-start-deploy
+      - run: make publish-start-publish
         env:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
           TABLE_NAME: ${{ vars.TABLE_NAME }}
@@ -153,7 +153,7 @@ jobs:
       - run: |
           pip install "poetry<3.0"
           poetry install --only main
-      - run: make publish-finish-deploy
+      - run: make publish-finish-publish
         env:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
           TABLE_NAME: ${{ vars.TABLE_NAME }}
