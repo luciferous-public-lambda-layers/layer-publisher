@@ -145,6 +145,7 @@ jobs:
         with:
           name: publish-layer-json
       - run: make publish-publish-before-publish
+      - run: aws s3 sync src/ s3://artifact-bucket-${{ secrets.ACCOUNT_ID }}-${{ env.AWS_REGION }}
 
   finish_deploy:
     runs-on: ubuntu-24.04
