@@ -32,7 +32,7 @@ def update_state():
     attributes = {
         "stateGenerate": "DEPLOYING",
         "updatedAt": datetime.now(jst).isoformat(),
-        "actionsGenerateUrl": env.url_action_run
+        "actionsGenerateUrl": env.url_action_run,
     }
     resp = table.update_item(
         Key={"identifier": env.identifier},

@@ -258,4 +258,5 @@ fabric.properties
 *.vsix
 
 # Custom
-/tmp
+/tmp/
+/layer.json

@@ -35,6 +35,10 @@ jobs:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
           TABLE_NAME: ${{ vars.TABLE_NAME }}
           URL_ACTION_RUN: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: publish-layer-json
+          path: layer.json
 
   build:
     runs-on: ${{ matrix.runner }}
@@ -68,6 +72,10 @@ jobs:
           echo "runner: ${{ matrix.runner }}"
         env:
           ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - uses: actions/download-artifact@v4
+        with:
+          name: publish-layer-json
+      - run: cat layer.json
 
   publish:
     runs-on: ubuntu-24.04

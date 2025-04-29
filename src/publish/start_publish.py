@@ -8,6 +8,8 @@ from zoneinfo import ZoneInfo
 import boto3
 from pydantic_settings import BaseSettings
 
+from src.utils.variables import FILE_LAYER_INFO
+
 if TYPE_CHECKING:
     from mypy_boto3_dynamodb.service_resource import Table
 
@@ -25,14 +27,15 @@ table: Table = boto3.resource("dynamodb").Table(env.table_name)
 
 
 def main():
-    update_state()
+    layer = update_state()
+    save_layer(layer=layer)
 
 
-def update_state():
+def update_state() -> dict:
     attributes = {
         "stateLayer": "DEPLOYING",
         "updatedAt": datetime.now(jst).isoformat(),
-        "actionsPublishUrl": env.url_action_run
+        "actionsPublishUrl": env.url_action_run,
     }
     resp = table.update_item(
         Key={"identifier": env.identifier},
@@ -43,6 +46,17 @@ def update_state():
         ReturnValues="ALL_NEW",
     )
     return resp["Attributes"]
+
+
+def save_layer(*, layer: dict):
+    with open(FILE_LAYER_INFO, "w") as f:
+        json.dump(
+            layer,
+            f,
+            indent=2,
+            ensure_ascii=False,
+            default=lambda x: {"type": str(type(x)), "value": str(x)},
+        )
 
 
 if __name__ == "__main__":
