@@ -7,7 +7,6 @@ from zoneinfo import ZoneInfo
 
 import boto3
 from pydantic_settings import BaseSettings
-
 from utils.variables import FILE_LAYER_INFO
 
 if TYPE_CHECKING:
