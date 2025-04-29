@@ -24,8 +24,7 @@ def main():
     account_id = get_account_id()
     region = load_region()
     bucket_name = generate_bucket_name(account_id=account_id, region=region)
-    if not has_target_bucket(bucket_name=bucket_name, region=region):
-        create_bucket(bucket_name=bucket_name, region=region)
+    create_bucket(bucket_name=bucket_name, region=region)
 
 
 def load_layer_info() -> Layer:
@@ -42,21 +41,17 @@ def load_region() -> str:
     return os.environ["AWS_REGION"]
 
 
-def has_target_bucket(*, bucket_name: str, region: str) -> bool:
-    all_buckets = []
-    for resp in s3.get_paginator("list_buckets").paginate(BucketRegion=region):
-        all_buckets += [x for x in resp.get("Buckets", [])]
-
-    return bucket_name in all_buckets
-
-
 def create_bucket(*, bucket_name: str, region: str):
-    if region == "us-east-1":
-        s3.create_bucket(Bucket=bucket_name)
-    else:
-        s3.create_bucket(
-            Bucket=bucket_name, CreateBucketConfiguration={"LocationConstraint": region}
-        )
+    try:
+        if region == "us-east-1":
+            s3.create_bucket(Bucket=bucket_name)
+        else:
+            s3.create_bucket(
+                Bucket=bucket_name,
+                CreateBucketConfiguration={"LocationConstraint": region},
+            )
+    except (s3.exceptions.BucketAlreadyExists, s3.exceptions.BucketAlreadyOwnedByYou):
+        pass
 
 
 if __name__ == "__main__":
