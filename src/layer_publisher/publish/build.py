@@ -22,6 +22,7 @@ def main():
     config = BuildConfig.load()
     layer = Layer.load()
     print(layer)
+    print(env)
     print("=" * 20)
     base_lines = generate_lines(
         layer=layer,
