@@ -39,7 +39,7 @@ def generate_lines(*, layer: Layer, all_runtimes: list[str]) -> BaseLines:
             if runtime in layer.get_ignore_versions():
                 continue
             result[arch].append(
-                f"build.sh --packages {text_packages} --arch {arch} --runtime {runtime}"
+                f"./build.sh --packages {text_packages} --arch {arch} --runtime {runtime}"
             )
     return result
 
