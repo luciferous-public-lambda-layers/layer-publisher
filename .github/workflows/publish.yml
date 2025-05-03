@@ -163,6 +163,7 @@ jobs:
         with:
           pattern: modules-*
           merge-multiple: true
+      - run: find modules/ -type f | sort
       - run: make publish-publish-before-publish
       - run: aws s3 sync src/ s3://artifact-bucket-${{ secrets.ACCOUNT_ID }}-${{ env.AWS_REGION }}
       - run: make publish-publish-after-publish
