@@ -87,6 +87,7 @@ jobs:
           MAX_CONCURRENCY: ${{ matrix.max_concurrency }}
           CONCURRENCY_INDEX: ${{ matrix.index }}
       - run: sh install_script.sh
+      - run: find dist/ -type f | sort
       - uses: actions/upload-artifact@v4
         with:
           path: dist/
