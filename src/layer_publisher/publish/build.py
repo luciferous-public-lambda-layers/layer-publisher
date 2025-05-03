@@ -21,6 +21,8 @@ def main():
     env = EnvironmentVariables()
     config = BuildConfig.load()
     layer = Layer.load()
+    print(layer)
+    print("=" * 20)
     base_lines = generate_lines(
         layer=layer,
         all_runtimes=config.runtimes,
@@ -62,8 +64,10 @@ def filter_lines(
 
 
 def write_script(*, lines: list[str]):
+    text = "\n".join(lines)
+    print(text)
     with open(FILE_INSTALL_SCRIPT, "w") as f:
-        f.write("\n".join(lines))
+        f.write(text)
 
 
 if __name__ == "__main__":

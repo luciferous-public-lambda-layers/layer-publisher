@@ -91,7 +91,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           path: dist/
-          name: modules-${{ matrix.runner }}-${{ matrix.max_concurrency }}-${{ matrix.runner }}
+          name: modules-${{ matrix.runner }}-${{ matrix.max_concurrency }}-${{ matrix.index }}
 
   publish:
     runs-on: ubuntu-24.04
