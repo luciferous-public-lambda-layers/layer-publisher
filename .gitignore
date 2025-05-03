@@ -260,3 +260,4 @@ fabric.properties
 # Custom
 /tmp/
 /layer.json
+/install_script.sh

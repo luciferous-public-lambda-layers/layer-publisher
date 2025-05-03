@@ -20,4 +20,5 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.11.6"
+pytest = "^8.3.5"
 

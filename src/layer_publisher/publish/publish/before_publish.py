@@ -20,16 +20,11 @@ s3: S3Client = boto3.client("s3")
 
 
 def main():
-    layer = load_layer_info()
+    layer = Layer.load()
     account_id = get_account_id()
     region = load_region()
     bucket_name = generate_bucket_name(account_id=account_id, region=region)
     create_bucket(bucket_name=bucket_name, region=region)
-
-
-def load_layer_info() -> Layer:
-    with open(FILE_LAYER_INFO) as f:
-        return Layer(**json.load(f))
 
 
 def get_account_id() -> str:
