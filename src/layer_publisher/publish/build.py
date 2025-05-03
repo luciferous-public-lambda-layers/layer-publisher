@@ -7,7 +7,7 @@ from layer_publisher.utils.variables import FILE_INSTALL_SCRIPT
 
 
 class EnvironmentVariables(BaseSettings):
-    runner_name: str
+    my_runner_name: str
     max_concurrency: int
     concurrency_index: int
 
@@ -50,7 +50,7 @@ def generate_lines(*, layer: Layer, all_runtimes: list[str]) -> BaseLines:
 def filter_lines(
     *, base_lines: BaseLines, env: EnvironmentVariables, is_architecture_split: bool
 ) -> list[str]:
-    if "arm" in env.runner_name:
+    if "arm" in env.my_runner_name:
         if is_architecture_split:
             lines = base_lines["arm"]
         else:

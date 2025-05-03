@@ -83,7 +83,7 @@ jobs:
           name: publish-layer-json
       - run: make publish-build
         env:
-          RUNNER_NAME: ${{ matrix.runner }}
+          MY_RUNNER_NAME: ${{ matrix.runner }}
           MAX_CONCURRENCY: ${{ matrix.max_concurrency }}
           CONCURRENCY_INDEX: ${{ matrix.index }}
       - run: sh install_script.sh

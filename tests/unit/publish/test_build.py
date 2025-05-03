@@ -131,7 +131,7 @@ class TestFilterLines:
                         ],
                     },
                     "env": index.EnvironmentVariables(
-                        runner_name="ubuntu-24.04",
+                        my_runner_name="ubuntu-24.04",
                         max_concurrency=2,
                         concurrency_index=0,
                     ),
@@ -162,7 +162,7 @@ class TestFilterLines:
                         ],
                     },
                     "env": index.EnvironmentVariables(
-                        runner_name="ubuntu-24.04",
+                        my_runner_name="ubuntu-24.04",
                         max_concurrency=2,
                         concurrency_index=1,
                     ),
@@ -192,7 +192,7 @@ class TestFilterLines:
                         ],
                     },
                     "env": index.EnvironmentVariables(
-                        runner_name="ubuntu-24.04-arm",
+                        my_runner_name="ubuntu-24.04-arm",
                         max_concurrency=2,
                         concurrency_index=1,
                     ),
@@ -219,7 +219,7 @@ class TestFilterLines:
                         ],
                     },
                     "env": index.EnvironmentVariables(
-                        runner_name="ubuntu-24.04-arm",
+                        my_runner_name="ubuntu-24.04-arm",
                         max_concurrency=2,
                         concurrency_index=0,
                     ),
@@ -250,7 +250,7 @@ class TestFilterLines:
                         ],
                     },
                     "env": index.EnvironmentVariables(
-                        runner_name="ubuntu-24.04-arm",
+                        my_runner_name="ubuntu-24.04-arm",
                         max_concurrency=2,
                         concurrency_index=1,
                     ),
