@@ -21,6 +21,7 @@ permissions:
 jobs:
   start_generate:
     runs-on: ubuntu-24.04
+    name: start_generate (${{ github.event.inputs.identifier }})
     steps:
       - name: Add Mask
         run: |

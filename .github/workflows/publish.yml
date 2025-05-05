@@ -15,15 +15,12 @@ permissions:
 jobs:
   start_deploy:
     runs-on: ubuntu-24.04
+    name: start_deploy (${{ github.event.inputs.identifier }})
     steps:
       - name: Add Mask
         run: |
           echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
       - uses: actions/checkout@v4
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ${{ github.event.inputs.identifier }}
-          path: build_config.json
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.ARN_ROLE_PUBLISHER }}
