@@ -167,6 +167,8 @@ jobs:
             sam.yml
             deploy.sh
       - run: sh deploy.sh
+        env:
+          CLOUDFORMATION_ROLE_ARN: ${{ secrets.ARN_ROLE_CLOUDFORMATION }}
       - run: aws s3 sync src/ s3://artifact-bucket-${{ secrets.ACCOUNT_ID }}-${{ env.AWS_REGION }}
       - run: make publish-publish-after-publish
 

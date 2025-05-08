@@ -949,14 +949,14 @@ class TestGenerateScript:
                 },
                 [
                     "aws cloudformation package --s3-bucket test-s3-bucket --template-file sam.yml --output-template-file template.yml",
-                    "sam deploy --stack-name LayerAwsCloudwatchLogsUrl --template-file template.yml",
+                    "sam deploy --stack-name LayerAwsCloudwatchLogsUrl --template-file template.yml --role-arn $CLOUDFORMATION_ROLE_ARN",
                 ],
             ),
             (
                 {"bucket_name": "test-s3-bucket", "identifier": "zstd"},
                 [
                     "aws cloudformation package --s3-bucket test-s3-bucket --template-file sam.yml --output-template-file template.yml",
-                    "sam deploy --stack-name LayerZstd --template-file template.yml",
+                    "sam deploy --stack-name LayerZstd --template-file template.yml --role-arn $CLOUDFORMATION_ROLE_ARN",
                 ],
             ),
         ],

@@ -241,7 +241,7 @@ def generate_script(*, bucket_name: str, identifier: str) -> str:
             "aws cloudformation package --s3-bucket {bucket_name} --template-file sam.yml --output-template-file template.yml".format(
                 bucket_name=bucket_name
             ),
-            "sam deploy --stack-name Layer{pascalize_identifier} --template-file template.yml".format(
+            "sam deploy --stack-name Layer{pascalize_identifier} --template-file template.yml --role-arn $CLOUDFORMATION_ROLE_ARN".format(
                 pascalize_identifier=pascalize(identifier)
             ),
         ]
