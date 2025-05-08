@@ -125,9 +125,9 @@ def generate_logical_name_layer(*, arch: Architecture, runtime: str) -> str:
     return f"Layer{generate_logical_name_suffix(arch=arch, runtime=runtime)}"
 
 
-def _generate_layer_code_uri(*, arch: Architecture, runtime: str) -> list[str]:
+def _generate_layer_content_uri(*, arch: Architecture, runtime: str) -> list[str]:
     return [
-        "      CodeUri: modules/{arch}/{runtime}".format(
+        "      ContentUri: modules/{arch}/{runtime}".format(
             arch="arm" if arch == Architecture.ARM else "amd", runtime=runtime
         )
     ]
@@ -179,7 +179,7 @@ def generate_layer(
         "    Properties:",
         "      RetentionPolicy: Retain",
     ]
-    lines += _generate_layer_code_uri(arch=arch, runtime=runtime)
+    lines += _generate_layer_content_uri(arch=arch, runtime=runtime)
     lines += _generate_layer_layer_name(
         identifier=desc_data.identifier, arch=arch, runtime=runtime
     )
