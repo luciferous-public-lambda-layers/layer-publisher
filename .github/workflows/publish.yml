@@ -140,6 +140,10 @@ jobs:
         with:
           role-to-assume: ${{ secrets.ARN_ROLE_PUBLISHER }}
           aws-region: ${{ matrix.region }}
+      - uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-python@v5
         with:
           python-version-file: .python-version
@@ -162,6 +166,7 @@ jobs:
             modules/
             sam.yml
             deploy.sh
+      - run: sh deploy.sh
       - run: aws s3 sync src/ s3://artifact-bucket-${{ secrets.ACCOUNT_ID }}-${{ env.AWS_REGION }}
       - run: make publish-publish-after-publish
 
