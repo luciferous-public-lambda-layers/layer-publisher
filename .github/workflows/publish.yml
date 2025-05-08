@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/upload-artifact@v4
         with:
-          name: publish=${{ github.event.inputs.identifier }}
+          name: _publish=${{ github.event.inputs.identifier }}
           path: build_config.json
       - uses: aws-actions/configure-aws-credentials@v4
         with:
