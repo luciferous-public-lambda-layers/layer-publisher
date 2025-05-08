@@ -150,6 +150,7 @@ jobs:
       - run: |
           pip install "poetry<3.0"
           poetry install --only main
+          touch template.yml
       - uses: actions/download-artifact@v4
         with:
           name: publish-layer-json
@@ -166,6 +167,7 @@ jobs:
             modules/
             sam.yml
             deploy.sh
+            template.yml
       - run: sh deploy.sh
         env:
           CLOUDFORMATION_ROLE_ARN: ${{ secrets.ARN_ROLE_CLOUDFORMATION }}
