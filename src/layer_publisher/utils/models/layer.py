@@ -12,6 +12,7 @@ class Layer(BaseModel):
     packages: list[str]
     ignoreVersions: list[str] | None
     isArchitectureSplit: bool
+    note: str | None
 
     def get_ignore_versions(self) -> list[str]:
         if self.ignoreVersions:

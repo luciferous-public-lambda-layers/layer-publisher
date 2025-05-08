@@ -74,15 +74,6 @@ jobs:
           RUNNER_NAME: ${{ matrix.runner }}
           MAX_CONCURRENCY: ${{ matrix.max_concurrency }}
           CONCURRENCY_INDEX: ${{ matrix.index }}
-      - name: tmp
-        run: |
-          echo $ACTIONS_URL
-          echo "identifier: ${{ github.event.inputs.identifier }}"
-          echo "max_concurrency: ${{ matrix.max_concurrency }}"
-          echo "index: ${{ matrix.index }}"
-          echo "runner: ${{ matrix.runner }}"
-        env:
-          ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       - uses: actions/download-artifact@v4
         with:
           name: publish-layer-json
@@ -155,13 +146,6 @@ jobs:
       - run: |
           pip install "poetry<3.0"
           poetry install --only main
-      - name: tmp
-        run: |
-          echo $ACTIONS_URL
-          echo "identifier: ${{ github.event.inputs.identifier }}"
-          echo "region: ${{ matrix.region }}"
-        env:
-          ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       - uses: actions/download-artifact@v4
         with:
           name: publish-layer-json
@@ -171,6 +155,13 @@ jobs:
           merge-multiple: true
       - run: find modules/ -type f | sort
       - run: make publish-publish-before-publish
+      - uses: actions/upload-artifact@v4
+        with:
+          name: merged-modules-${{ matrix.region }}
+          path: |
+            modules/
+            sam.yml
+            deploy.sh
       - run: aws s3 sync src/ s3://artifact-bucket-${{ secrets.ACCOUNT_ID }}-${{ env.AWS_REGION }}
       - run: make publish-publish-after-publish
 
