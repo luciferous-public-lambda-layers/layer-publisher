@@ -69,9 +69,9 @@ jobs:
           pip install "poetry<3.0"
           poetry install --only main
           mkdir -p dist/modules
-          touch "dist/modules/keep-${RUNNER_NAME}-${MAX_CONCURRENCY}-${CONCURRENCY_INDEX}"
+          touch "dist/modules/keep-${MY_RUNNER_NAME}-${MAX_CONCURRENCY}-${CONCURRENCY_INDEX}"
         env:
-          RUNNER_NAME: ${{ matrix.runner }}
+          MY_RUNNER_NAME: ${{ matrix.runner }}
           MAX_CONCURRENCY: ${{ matrix.max_concurrency }}
           CONCURRENCY_INDEX: ${{ matrix.index }}
       - uses: actions/download-artifact@v4
