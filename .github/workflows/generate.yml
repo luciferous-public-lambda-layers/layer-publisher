@@ -105,15 +105,11 @@ jobs:
       - run: |
           pip install "poetry<3.0"
           poetry install --only main
-      - run: |
-          echo $ACTIONS_URL
-          echo "identifier: ${{ github.event.inputs.identifier }}"
-        env:
-          ACTIONS_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-      - uses: actions/download-artifact@v4
+      - run: make generate-fetch-layers
+      - uses: actions/upload-artifact@v4
         with:
-          name: generate-layer-json
-      - run: cat layer.json
+          name: layers-${{ matrix.region }}
+          path: dist/
 
   complete_generate:
     runs-on: ubuntu-24.04
@@ -124,6 +120,14 @@ jobs:
         run: |
           echo "::add-mask::${{ secrets.ACCOUNT_ID }}"
       - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: layers-*
+          merge-multiple: true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: merged-layers
+          path: layers/
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.ARN_ROLE_PUBLISHER }}

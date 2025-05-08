@@ -25,6 +25,9 @@ publish-finish-publish:
 generate-start-generate:
 	poetry run python src/layer_publisher/generate/start_generate.py
 
+generate-fetch-layers:
+	poetry run python src/layer_publisher/generate/fetch_layers.py
+
 generate-complete-generate:
 	poetry run python src/layer_publisher/generate/complete_generate.py
 
@@ -39,4 +42,5 @@ test-unit:
 	publish-publish-after-publish \
 	publish-finish-publish \
 	generate-start-generate \
+	generate-fetch-layers \
 	generate-complete-generate
