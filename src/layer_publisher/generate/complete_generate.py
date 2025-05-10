@@ -32,6 +32,10 @@ class Layer(BaseModel):
     region: str
 
 
+class AllLayers(BaseModel):
+    all_layers: list[Layer]
+
+
 jst = ZoneInfo("Asia/Tokyo")
 env = EnvironmentVariables()
 
@@ -65,7 +69,7 @@ def convert_data(*, layer: dict, region: str) -> Layer:
     )
 
 
-def load_layers(*, all_files: list[str]) -> list[Layer]:
+def load_layers(*, all_files: list[str]) -> AllLayers:
     result = []
 
     exclude_arns = {
@@ -81,14 +85,18 @@ def load_layers(*, all_files: list[str]) -> list[Layer]:
             if x["LayerVersionArn"] not in exclude_arns
         ]
 
-    return result
+    return AllLayers(all_layers=result)
 
 
 def aggregate_layers():
     all_files = list_files()
     all_layers = load_layers(all_files=all_files)
     with open("all_layers.json", "w") as f:
-        json.dump(all_layers, f, indent=2, ensure_ascii=False)
+        json.dump(all_layers.model_dump(), f, indent=2, ensure_ascii=False)
+    with open("single_layer.json", "w") as f:
+        json.dump(
+            all_layers.all_layers[0].model_dump(), f, indent=2, ensure_ascii=False
+        )
 
 
 def update_state():
