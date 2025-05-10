@@ -68,10 +68,18 @@ def convert_data(*, layer: dict, region: str) -> Layer:
 def load_layers(*, all_files: list[str]) -> list[Layer]:
     result = []
 
+    exclude_arns = {
+        "arn:aws:lambda:ap-northeast-1:043309354008:layer:dd530c3cdd49e5bdf0fbeaf774c0c63d484250ee5ae4b101647f6757bf1e180d:3"
+    }
+
     for path in all_files:
         with open(path) as f:
             data = json.load(f)
-        result += [convert_data(layer=x, region=data["region"]) for x in data["layers"]]
+        result += [
+            convert_data(layer=x, region=data["region"])
+            for x in data["layers"]
+            if x["LayerVersionArn"] not in exclude_arns
+        ]
 
     return result
 
