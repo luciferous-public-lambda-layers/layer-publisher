@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/upload-artifact@v4
         with:
-          name: generate=${{ github.event.inputs.identifier }}
+          name: _generate=${{ github.event.inputs.identifier }}
           path: build_config.json
       - uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -142,6 +142,11 @@ jobs:
         env:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
           TABLE_NAME: ${{ vars.TABLE_NAME }}
+          BUCKET_NAME_LAYERS_DATA: ${{ secrets.BUCKET_NAME_LAYERS_DATA }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: all-layers
+          path: all_layers.json
 
   notify-failed:
     runs-on: ubuntu-24.04
