@@ -37,9 +37,9 @@ class Layer(BaseModel):
     def sort_key(self) -> tuple[float, int, str]:
         mapping_arch = {"arm64,x86_64": 0, "x86_64": 1, "arm64": 2}
 
-        version = float("-" + self.runtime)
+        version = float("-" + self.runtime[6:])
         arch = mapping_arch[",".join(sorted(self.architectures))]
-        return (version, arch, self.region)
+        return version, arch, self.region
 
 
 class AllLayers(BaseModel):
