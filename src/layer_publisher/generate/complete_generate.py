@@ -10,6 +10,7 @@ import boto3
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
+from layer_publisher.utils.models import LayerForGenerate
 from layer_publisher.utils.variables import FILE_SOURCE_DATA
 
 if TYPE_CHECKING:
@@ -22,44 +23,19 @@ class EnvironmentVariables(BaseSettings):
     bucket_name_layers_data: str
 
 
-class Layer(BaseModel):
-    identifier: str
-    hash: str
-    packages: str
-    note: str | None = None
-    runtime: str
-    architectures: list[str]
-    layer_version_arn: str
-    created_at: str
-    region: str
-
-    def parse_runtime(self) -> int:
-        version = self.runtime[6:]
-        major, minor = [int(x) for x in version.split(".")]
-        return major * 1000 + minor
-
-    @property
-    def sort_key(self) -> tuple[int, int, str]:
-        mapping_arch = {"arm64,x86_64": 0, "x86_64": 1, "arm64": 2}
-
-        version = self.parse_runtime()
-        arch = mapping_arch[",".join(sorted(self.architectures))]
-        return version, arch, self.region
-
-
 class AllLayers(BaseModel):
-    all_layers: list[Layer]
+    all_layers: list[LayerForGenerate]
 
 
 class TmpMapping(BaseModel):
     created_at: str
-    mapping: dict[str, Layer]
+    mapping: dict[str, LayerForGenerate]
 
 
 class FixedClassifiedLayers(BaseModel):
     identifier: str
-    latest_layers: list[Layer]
-    all_layers: list[Layer]
+    latest_layers: list[LayerForGenerate]
+    all_layers: list[LayerForGenerate]
 
 
 class SourceData(BaseModel):
@@ -81,7 +57,7 @@ def list_files() -> list[str]:
     return sorted(glob("layers/**/*.json", recursive=True))
 
 
-def convert_data(*, layer: dict, region: str) -> Layer:
+def convert_data(*, layer: dict, region: str) -> LayerForGenerate:
     description: str = layer["Description"]
     data = {}
     for line in description.split("\n"):
@@ -89,7 +65,7 @@ def convert_data(*, layer: dict, region: str) -> Layer:
             continue
         key, value = line.split("=== ")
         data[key] = value
-    return Layer(
+    return LayerForGenerate(
         runtime=layer["CompatibleRuntimes"][0],
         architectures=layer["CompatibleArchitectures"],
         layer_version_arn=layer["LayerVersionArn"],
@@ -100,7 +76,7 @@ def convert_data(*, layer: dict, region: str) -> Layer:
 
 
 def load_layers(*, all_files: list[str]) -> AllLayers:
-    result: list[Layer] = []
+    result: list[LayerForGenerate] = []
 
     exclude_arns = {
         "arn:aws:lambda:ap-northeast-1:043309354008:layer:dd530c3cdd49e5bdf0fbeaf774c0c63d484250ee5ae4b101647f6757bf1e180d:3"
@@ -118,7 +94,7 @@ def load_layers(*, all_files: list[str]) -> AllLayers:
     return AllLayers(all_layers=result)
 
 
-def classify_layers(*, all_layers: list[Layer]) -> dict:
+def classify_layers(*, all_layers: list[LayerForGenerate]) -> dict:
     result = {}
     for layer in all_layers:
         mapping_identifier = result.get(layer.identifier, {})
@@ -136,7 +112,7 @@ def classify_layers(*, all_layers: list[Layer]) -> dict:
 
 
 def fix_layers_for_identifier(
-    *, identifier: str, mapping_hash: dict[str, dict[str, Layer]]
+    *, identifier: str, mapping_hash: dict[str, dict[str, LayerForGenerate]]
 ) -> FixedClassifiedLayers:
     # identifier -> hash -> runtime:arches:region
     array_hash = sorted(
