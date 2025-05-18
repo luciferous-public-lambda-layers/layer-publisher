@@ -33,6 +33,14 @@ class Layer(BaseModel):
     created_at: str
     region: str
 
+    @property
+    def sort_key(self) -> tuple[float, int, str]:
+        mapping_arch = {"arm64,x86_64": 0, "x86_64": 1, "arm64": 2}
+
+        version = float("-" + self.runtime)
+        arch = mapping_arch[",".join(sorted(self.architectures))]
+        return (version, arch, self.region)
+
 
 class AllLayers(BaseModel):
     all_layers: list[Layer]
@@ -139,7 +147,7 @@ def fix_layers_for_identifier(
         identifier=identifier, latest_layers=[], all_layers=[]
     )
     for i, mapping in enumerate(array_hash):
-        node = [mapping.mapping[key] for key in sorted(mapping.mapping.keys())]
+        node = sorted(mapping.mapping.values(), key=lambda x: x.sort_key)
         if i == 0:
             result.latest_layers += node
         result.all_layers += node
