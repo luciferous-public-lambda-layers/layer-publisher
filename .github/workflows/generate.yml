@@ -147,6 +147,10 @@ jobs:
         with:
           name: all-layers
           path: all_layers.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-data
+          path: source_data.json
 
   notify-failed:
     runs-on: ubuntu-24.04

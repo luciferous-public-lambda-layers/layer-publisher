@@ -261,3 +261,6 @@ fabric.properties
 /tmp/
 /layer.json
 /install_script.sh
+/layers/
+/all_layers.json
+/single_layer.json

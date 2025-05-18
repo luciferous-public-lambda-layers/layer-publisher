@@ -10,6 +10,8 @@ import boto3
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
+from layer_publisher.utils.variables import FILE_SOURCE_DATA
+
 if TYPE_CHECKING:
     from mypy_boto3_dynamodb.service_resource import Table
 
@@ -34,6 +36,21 @@ class Layer(BaseModel):
 
 class AllLayers(BaseModel):
     all_layers: list[Layer]
+
+
+class TmpMapping(BaseModel):
+    created_at: str
+    mapping: dict[str, Layer]
+
+
+class FixedClassifiedLayers(BaseModel):
+    identifier: str
+    latest_layers: list[Layer]
+    all_layers: list[Layer]
+
+
+class SourceData(BaseModel):
+    layers: list[FixedClassifiedLayers]
 
 
 jst = ZoneInfo("Asia/Tokyo")
@@ -70,7 +87,7 @@ def convert_data(*, layer: dict, region: str) -> Layer:
 
 
 def load_layers(*, all_files: list[str]) -> AllLayers:
-    result = []
+    result: list[Layer] = []
 
     exclude_arns = {
         "arn:aws:lambda:ap-northeast-1:043309354008:layer:dd530c3cdd49e5bdf0fbeaf774c0c63d484250ee5ae4b101647f6757bf1e180d:3"
@@ -88,15 +105,67 @@ def load_layers(*, all_files: list[str]) -> AllLayers:
     return AllLayers(all_layers=result)
 
 
+def classify_layers(*, all_layers: list[Layer]) -> dict:
+    result = {}
+    for layer in all_layers:
+        mapping_identifier = result.get(layer.identifier, {})
+
+        mapping_hash = mapping_identifier.get(layer.hash, {})
+
+        arches = ", ".join(layer.architectures)
+        key_region_arch = f"{layer.runtime}:{arches}:{layer.region}"
+
+        mapping_hash[key_region_arch] = layer
+        mapping_identifier[layer.hash] = mapping_hash
+        result[layer.identifier] = mapping_identifier
+
+    return result
+
+
+def fix_layers_for_identifier(
+    *, identifier: str, mapping_hash: dict[str, dict[str, Layer]]
+) -> FixedClassifiedLayers:
+    # identifier -> hash -> runtime:arches:region
+    array_hash = sorted(
+        [
+            TmpMapping(mapping=v, created_at=max([x.created_at for x in v.values()]))
+            for k, v in mapping_hash.items()
+        ],
+        key=lambda x: x.created_at,
+        reverse=True,
+    )
+
+    result = FixedClassifiedLayers(
+        identifier=identifier, latest_layers=[], all_layers=[]
+    )
+    for i, mapping in enumerate(array_hash):
+        node = [mapping.mapping[key] for key in sorted(mapping.mapping.keys())]
+        if i == 0:
+            result.latest_layers += node
+        result.all_layers += node
+    return result
+
+
 def aggregate_layers():
     all_files = list_files()
     all_layers = load_layers(all_files=all_files)
+    mapping_layers = classify_layers(all_layers=all_layers.all_layers)
+    source_data = SourceData(
+        layers=[
+            fix_layers_for_identifier(identifier=k, mapping_hash=v)
+            for k, v in mapping_layers.items()
+        ]
+    )
+
     with open("all_layers.json", "w") as f:
         json.dump(all_layers.model_dump(), f, indent=2, ensure_ascii=False)
     with open("single_layer.json", "w") as f:
         json.dump(
             all_layers.all_layers[0].model_dump(), f, indent=2, ensure_ascii=False
         )
+
+    with open(FILE_SOURCE_DATA, "w") as f:
+        json.dump(source_data.model_dump(), f, indent=2, ensure_ascii=False)
 
 
 def update_state():

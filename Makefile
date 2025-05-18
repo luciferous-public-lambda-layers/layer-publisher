@@ -34,6 +34,13 @@ generate-complete-generate:
 test-unit:
 	poetry run pytest -vv tests/unit
 
+call-generate-complete-generate:
+	IDENTIFIER=zstd \
+	TABLE_NAME=layers \
+	BUCKET_NAME_LAYERS_DATA=layers-data-20250508220512904500000001 \
+	poetry run python src/layer_publisher/generate/complete_generate.py
+
+
 .PHONY: \
 	format \
 	update-failed \
