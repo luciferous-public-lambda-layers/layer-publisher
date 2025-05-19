@@ -23,4 +23,4 @@ class LayerForGenerate(BaseModel):
 
         version = self.parse_runtime()
         arch = mapping_arch[",".join(sorted(self.architectures))]
-        return version, arch, self.region
+        return self.region, version, arch
