@@ -143,6 +143,9 @@ jobs:
           IDENTIFIER: ${{ github.event.inputs.identifier }}
           TABLE_NAME: ${{ vars.TABLE_NAME }}
           BUCKET_NAME_LAYERS_DATA: ${{ secrets.BUCKET_NAME_LAYERS_DATA }}
+      - run: aws s3 cp source_data.json "s3://${BUCKET_NAME_LAYERS_DATA}/source_data.json"
+        env:
+          BUCKET_NAME_LAYERS_DATA: ${{ secrets.BUCKET_NAME_LAYERS_DATA }}
       - uses: actions/upload-artifact@v4
         with:
           name: all-layers
