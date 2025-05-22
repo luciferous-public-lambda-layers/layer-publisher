@@ -154,6 +154,9 @@ jobs:
         with:
           name: source-data
           path: source_data.json
+      - run: curl -X POST "$HOOK_URL"
+        env:
+          HOOK_URL: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK_URL }}
 
   notify-failed:
     runs-on: ubuntu-24.04
